@@ -13,7 +13,7 @@ pub struct WindowCanvas {
 
 pub trait RenderCanvas {
     fn size(&self) -> (u32, u32);
-    fn set_pixel(&mut self, x: i32, y: i32, r: u8, g: u8, b: u8);
+    fn set_pixel(&mut self, x: i32, y: i32, color: Color);
     fn clear(&mut self);
     fn present(&mut self);
 }
@@ -47,11 +47,11 @@ impl RenderCanvas for WindowCanvas {
         (w / self.scale, h / self.scale)
     }
 
-    fn set_pixel(&mut self, x: i32, y: i32, r: u8, g: u8, b: u8) {
+    fn set_pixel(&mut self, x: i32, y: i32, color: Color) {
         let iscale = self.scale as i32;
         let rect = Rect::new(x * iscale, y * iscale, self.scale, self.scale);
 
-        self.canvas.set_draw_color(Color::RGB(r, g, b));
+        self.canvas.set_draw_color(color);
         self.canvas.fill_rect(rect).unwrap();
 
         self.canvas.set_draw_color(Color::RGB(0, 0, 0));

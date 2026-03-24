@@ -1,3 +1,5 @@
+use core::f32;
+
 use crate::{
     camera::Camera,
     canvas::RenderCanvas,
@@ -5,16 +7,26 @@ use crate::{
     mesh::{Face, Mesh},
     ray::Ray,
 };
+use sdl2::pixels::Color;
 
-fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<(f32, f32, f32)> {
+fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
+    let mut last_t = f32::MAX;
+    let mut nearest_face = None;
+
     for face in faces {
         let r = ray_triangle_intersection(ray, face);
-        if r.is_some() {
-            return r;
+        if let Some(t) = r {
+            if t < last_t {
+                last_t = t;
+                nearest_face = Some(face);
+            }
         }
     }
 
-    None
+    match nearest_face {
+        Some(face) => Some(face.color()),
+        None => None,
+    }
 }
 
 pub fn draw_frame(canvas: &mut impl RenderCanvas, camera: &Camera, mesh: &mut Mesh) {
@@ -27,18 +39,8 @@ pub fn draw_frame(canvas: &mut impl RenderCanvas, camera: &Camera, mesh: &mut Me
     for y in 0..h {
         for x in 0..w {
             let ray = camera.get_pixel_ray(x, y);
-
-            let r = find_first_ray_hit(&ray, &faces);
-
-            if r.is_some() {
-                let Some((u, v, t)) = r else { todo!() };
-                let (r, g, b) = (
-                    (u * 255.0) as u8,
-                    (v * 255.0) as u8,
-                    ((t - 1.0) * 255.0) as u8,
-                );
-                //screen.set_pixel(x as i32, y as i32, 100, 200, 233);
-                canvas.set_pixel(x as i32, y as i32, r, g, b);
+            if let Some(color) = find_first_ray_hit(&ray, &faces) {
+                canvas.set_pixel(x as i32, y as i32, color);
             }
         }
     }

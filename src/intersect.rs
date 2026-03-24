@@ -4,7 +4,8 @@ use crate::{mesh::Face, ray::Ray};
 /// find possible intersection between a ray and a triangle face,
 /// using Möller-Trumbore algorithm.
 ///
-pub fn ray_triangle_intersection(ray: &Ray, face: &Face) -> Option<(f32, f32, f32)> {
+
+pub fn ray_triangle_intersection(ray: &Ray, face: &Face) -> Option<f32> {
     let v0v1 = face.v0v1();
     let v0v2 = face.v0v2();
     let pvec = ray.direction().cross(&v0v2);
@@ -30,5 +31,5 @@ pub fn ray_triangle_intersection(ray: &Ray, face: &Face) -> Option<(f32, f32, f3
     }
 
     let t = v0v2.dot(&qvec) * inv_det;
-    Some((u, v, t))
+    Some(t)
 }

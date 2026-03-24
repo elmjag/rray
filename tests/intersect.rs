@@ -4,12 +4,14 @@ use rray::{
     ray::Ray,
     space::{Vector, Vertex},
 };
+use sdl2::pixels::Color;
 
 fn get_face() -> Face {
     Face::new(
         Vertex::new(-0.5, 0.0, 5.0),
         Vertex::new(0.0, 1.0, 5.0),
         Vertex::new(0.5, 0.0, 5.0),
+        Color::GRAY,
     )
 }
 

@@ -1,17 +1,18 @@
 use crate::space::{Vector, Vertex};
+use sdl2::pixels::Color;
 
 #[derive(Debug)]
-pub struct Face(Vertex, Vertex, Vertex);
+pub struct Face(Vertex, Vertex, Vertex, Color);
 
 pub struct Mesh {
     vertices: Vec<Vertex>,
-    triangles: Vec<(usize, usize, usize)>,
+    triangles: Vec<(usize, usize, usize, Color)>,
     faces: Option<Vec<Face>>,
 }
 
 impl Face {
-    pub fn new(vertex0: Vertex, vertex1: Vertex, vertex2: Vertex) -> Face {
-        Face(vertex0, vertex1, vertex2)
+    pub fn new(vertex0: Vertex, vertex1: Vertex, vertex2: Vertex, color: Color) -> Face {
+        Face(vertex0, vertex1, vertex2, color)
     }
 
     ///
@@ -34,10 +35,14 @@ impl Face {
     pub fn v0v2(&self) -> Vector {
         &self.2 - &self.0
     }
+
+    pub fn color(&self) -> Color {
+        self.3
+    }
 }
 
 impl Mesh {
-    pub fn new(vertices: Vec<Vertex>, triangles: Vec<(usize, usize, usize)>) -> Mesh {
+    pub fn new(vertices: Vec<Vertex>, triangles: Vec<(usize, usize, usize, Color)>) -> Mesh {
         Mesh {
             vertices,
             triangles,
@@ -48,11 +53,12 @@ impl Mesh {
     fn build_faces(&self) -> Vec<Face> {
         let mut faces = Vec::with_capacity(self.triangles.len());
 
-        for (idx0, idx1, idx2) in &self.triangles {
+        for (idx0, idx1, idx2, color) in &self.triangles {
             let face = Face::new(
                 self.vertices[*idx0].clone(),
                 self.vertices[*idx1].clone(),
                 self.vertices[*idx2].clone(),
+                color.clone(),
             );
             faces.push(face);
         }
