@@ -9,6 +9,8 @@ use crate::{
 };
 use sdl2::pixels::Color;
 
+const CLEAR_COLOR: Color = Color::WHITE;
+
 fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
     let mut last_t = f32::MAX;
     let mut nearest_face = None;
@@ -34,7 +36,7 @@ pub fn draw_frame(canvas: &mut impl RenderCanvas, camera: &Camera, mesh: &mut Me
 
     let (w, h) = canvas.size();
 
-    canvas.clear();
+    canvas.clear(CLEAR_COLOR);
 
     for y in 0..h {
         for x in 0..w {

@@ -31,7 +31,7 @@ impl RenderCanvas for TestCanvas {
         self.pixels.insert((x, y, c));
     }
 
-    fn clear(&mut self) {
+    fn clear(&mut self, _clear_color: Color) {
         self.pixels.clear();
     }
 
