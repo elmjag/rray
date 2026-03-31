@@ -34,7 +34,7 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
 pub fn draw_frame(canvas: &mut impl RenderCanvas, camera: &Camera, mesh: &mut Mesh) {
     let faces = mesh.get_faces();
 
-    let (w, h) = canvas.size();
+    let (w, h) = camera.canvas_size();
 
     canvas.clear(CLEAR_COLOR);
 

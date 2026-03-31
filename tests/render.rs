@@ -1,11 +1,11 @@
 use sdl2::pixels::Color;
 use std::collections::HashSet;
 
-use rray::{camera::Camera, canvas::RenderCanvas, mesh::Mesh, render, space::Vertex};
+use rray::{camera::Camera, canvas::RenderCanvas, mesh::Mesh, render};
 
-const DEPTH: u32 = 32;
 const WIDTH: u32 = 24;
 const HEIGHT: u32 = 24;
+const DEPTH: f32 = 32.0;
 
 const GREEN_DEPTH: f32 = 8.0;
 const RED_DEPTH: f32 = 8.0;
@@ -23,10 +23,6 @@ impl TestCanvas {
 }
 
 impl RenderCanvas for TestCanvas {
-    fn size(&self) -> (u32, u32) {
-        (WIDTH, HEIGHT)
-    }
-
     fn set_pixel(&mut self, x: i32, y: i32, c: Color) {
         self.pixels.insert((x, y, c));
     }
@@ -41,17 +37,18 @@ impl RenderCanvas for TestCanvas {
 }
 
 fn get_mesh() -> Mesh {
+    let colors = vec![Color::GREEN.rgb(), Color::RED.rgb()];
     let vertices = vec![
-        Vertex::new(-2.0, 0.0, GREEN_DEPTH + 2.0),
-        Vertex::new(1.0, 2.0, GREEN_DEPTH),
-        Vertex::new(1.0, -2.0, GREEN_DEPTH),
-        Vertex::new(-1.0, 2.0, RED_DEPTH),
-        Vertex::new(2.0, 0.0, RED_DEPTH + 2.0),
-        Vertex::new(-1.0, -2.0, RED_DEPTH),
+        (-2.0, 0.0, GREEN_DEPTH + 2.0),
+        (1.0, 2.0, GREEN_DEPTH),
+        (1.0, -2.0, GREEN_DEPTH),
+        (-1.0, 2.0, RED_DEPTH),
+        (2.0, 0.0, RED_DEPTH + 2.0),
+        (-1.0, -2.0, RED_DEPTH),
     ];
-    let triangles = vec![(0, 1, 2, Color::GREEN), (3, 4, 5, Color::RED)];
+    let triangles = vec![(0, 1, 2, 0), (3, 4, 5, 1)];
 
-    Mesh::new(vertices, triangles)
+    Mesh::new(colors, vertices, triangles)
 }
 
 ///

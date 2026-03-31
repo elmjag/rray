@@ -1,12 +1,18 @@
 use crate::space::{Vector, Vertex};
 use sdl2::pixels::Color;
+use serde::Deserialize;
 
 #[derive(Debug)]
 pub struct Face(Vertex, Vertex, Vertex, Color);
 
+#[derive(Debug, Deserialize)]
 pub struct Mesh {
-    vertices: Vec<Vertex>,
-    triangles: Vec<(usize, usize, usize, Color)>,
+    vertices: Vec<(f32, f32, f32)>,
+    colors: Vec<(u8, u8, u8)>,
+    /// triangle as indices into `vertices` and `colors` vectors, as follows:
+    /// (vertex0, vertex1, vertex2, color)
+    triangles: Vec<(usize, usize, usize, usize)>,
+    #[serde(skip)]
     faces: Option<Vec<Face>>,
 }
 
@@ -42,8 +48,13 @@ impl Face {
 }
 
 impl Mesh {
-    pub fn new(vertices: Vec<Vertex>, triangles: Vec<(usize, usize, usize, Color)>) -> Mesh {
+    pub fn new(
+        colors: Vec<(u8, u8, u8)>,
+        vertices: Vec<(f32, f32, f32)>,
+        triangles: Vec<(usize, usize, usize, usize)>,
+    ) -> Mesh {
         Mesh {
+            colors,
             vertices,
             triangles,
             faces: None,
@@ -51,14 +62,23 @@ impl Mesh {
     }
 
     fn build_faces(&self) -> Vec<Face> {
+        let colors: Vec<Color> = self
+            .colors
+            .iter()
+            .map(|v| {
+                let (r, g, b) = *v;
+                Color::RGB(r, g, b)
+            })
+            .collect();
+
         let mut faces = Vec::with_capacity(self.triangles.len());
 
-        for (idx0, idx1, idx2, color) in &self.triangles {
+        for indices in &self.triangles {
             let face = Face::new(
-                self.vertices[*idx0].clone(),
-                self.vertices[*idx1].clone(),
-                self.vertices[*idx2].clone(),
-                color.clone(),
+                Vertex::from(self.vertices[indices.0]),
+                Vertex::from(self.vertices[indices.1]),
+                Vertex::from(self.vertices[indices.2]),
+                colors[indices.3],
             );
             faces.push(face);
         }

@@ -1,26 +1,26 @@
 use rray::camera::Camera;
-use rray::loader::get_mesh;
+use rray::loader::load_scene;
 use rray::mesh::Mesh;
 use rray::pump::Pump;
 use rray::render::draw_frame;
 use rray::window::WindowCanvas;
 use rray::{args, ppm::PpmCanvas};
 use std::path::PathBuf;
+use std::process::ExitCode;
 use std::{thread::sleep, time::Duration};
 
 const SCALE: u32 = 16;
-const DEPTH: u32 = 64;
-const WIDTH: u32 = 16*4;
-const HEIGHT: u32 = 16*4;
 
 fn render_to_ppm(file: PathBuf, mut camera: Camera, mut mesh: Mesh) {
-    let mut canvas = PpmCanvas::new(file, WIDTH, HEIGHT);
+    let (width, height) = camera.canvas_size();
+    let mut canvas = PpmCanvas::new(file, width, height);
     draw_frame(&mut canvas, &mut camera, &mut mesh);
 }
 
 fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
     let sdl_context = sdl2::init().unwrap();
-    let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", SCALE, WIDTH, HEIGHT);
+    let (width, height) = camera.canvas_size();
+    let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", SCALE, width, height);
     let mut pump = Pump::init(&sdl_context);
 
     draw_frame(&mut canvas, &mut camera, &mut mesh);
@@ -30,15 +30,22 @@ fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
     }
 }
 
-pub fn main() {
+pub fn main() -> ExitCode {
     let args = args::parse();
-    let camera = Camera::new(WIDTH, HEIGHT, DEPTH);
-    let mesh = get_mesh();
+
+    let (camera, mesh) = match load_scene(args.scene) {
+        Ok(x) => x,
+        Err(err) => {
+            eprintln!("Failed to load scene file: {err}");
+            return ExitCode::FAILURE;
+        }
+    };
 
     if let Some(file) = args.out {
         render_to_ppm(file, camera, mesh);
-        return;
+    } else {
+        render_to_screen(camera, mesh);
     }
 
-    render_to_screen(camera, mesh);
+    ExitCode::SUCCESS
 }

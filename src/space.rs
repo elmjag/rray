@@ -42,6 +42,12 @@ impl Vertex {
     pub fn new(x: f32, y: f32, z: f32) -> Vertex {
         Vertex { x, y, z }
     }
+
+    /// Create vertex from a tuple of (x, y, z) coordinates.
+    pub fn from(coordinates: (f32, f32, f32)) -> Vertex {
+        let (x, y, z) = coordinates;
+        Vertex { x, y, z }
+    }
 }
 
 ///

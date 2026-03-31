@@ -34,12 +34,6 @@ impl WindowCanvas {
 }
 
 impl RenderCanvas for WindowCanvas {
-    fn size(&self) -> (u32, u32) {
-        let (w, h) = self.canvas.window().size();
-
-        (w / self.scale, h / self.scale)
-    }
-
     fn set_pixel(&mut self, x: i32, y: i32, color: Color) {
         let iscale = self.scale as i32;
         let rect = Rect::new(x * iscale, y * iscale, self.scale, self.scale);

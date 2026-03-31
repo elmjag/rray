@@ -41,10 +41,6 @@ impl PpmCanvas {
 }
 
 impl RenderCanvas for PpmCanvas {
-    fn size(&self) -> (u32, u32) {
-        (self.width as u32, self.height as u32)
-    }
-
     fn set_pixel(&mut self, x: i32, y: i32, color: sdl2::pixels::Color) {
         let idx = y * (self.width as i32) + x;
         self.pixels[idx as usize] = color;
