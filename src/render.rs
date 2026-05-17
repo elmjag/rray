@@ -1,5 +1,3 @@
-use core::f32;
-
 use crate::{
     camera::Camera,
     canvas::RenderCanvas,
@@ -7,7 +5,9 @@ use crate::{
     mesh::{Face, Mesh},
     ray::Ray,
 };
+use core::f32;
 use sdl2::pixels::Color;
+use std::time::Duration;
 
 const CLEAR_COLOR: Color = Color::WHITE;
 
@@ -31,10 +31,22 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
     }
 }
 
-pub fn draw_frame(canvas: &mut impl RenderCanvas, camera: &Camera, mesh: &mut Mesh) {
+///
+/// Draw a mesh to provided canvas.
+///
+/// `frame_delta` is the time elapsed since last frame was drawn.
+///
+///
+pub fn draw_frame(
+    canvas: &mut impl RenderCanvas,
+    camera: &Camera,
+    mesh: &mut Mesh,
+    frame_delta: Duration,
+) {
     let faces = mesh.get_faces();
-
     let (w, h) = camera.canvas_size();
+
+    println!("delta {:?}", frame_delta);
 
     canvas.clear(CLEAR_COLOR);
 

@@ -1,3 +1,4 @@
+use crate::timer::FpsTimer;
 use sdl2::keyboard::Keycode;
 use sdl2::{EventPump, Sdl, event::Event};
 
@@ -11,20 +12,25 @@ impl Pump {
         Pump { event_pump }
     }
 
-    pub fn terminated(&mut self) -> bool {
-        for event in self.event_pump.poll_iter() {
-            match event {
-                Event::Quit { .. }
-                | Event::KeyDown {
-                    keycode: Some(Keycode::Escape),
-                    ..
-                } => {
-                    return true;
+    pub fn terminated(&mut self, fps_timer: &FpsTimer) -> bool {
+        loop {
+            let sleep = fps_timer.get_fps_sleep();
+            let maybe_event = self.event_pump.wait_event_timeout(sleep);
+
+            if let Some(event) = maybe_event {
+                match event {
+                    Event::Quit { .. }
+                    | Event::KeyDown {
+                        keycode: Some(Keycode::Escape),
+                        ..
+                    } => {
+                        return true;
+                    }
+                    _ => {}
                 }
-                _ => {}
+            } else if sleep == 0 {
+                return false;
             }
         }
-
-        return false;
     }
 }

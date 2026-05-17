@@ -12,4 +12,5 @@ pub mod ray;
 pub mod render;
 pub mod rotation;
 pub mod space;
+pub mod timer;
 pub mod window;
