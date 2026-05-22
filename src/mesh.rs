@@ -1,4 +1,7 @@
-use crate::space::{Vector, Vertex};
+use crate::{
+    space::{Vector, Vertex},
+    transform::Transform,
+};
 use sdl2::pixels::Color;
 use serde::Deserialize;
 
@@ -12,8 +15,6 @@ pub struct Mesh {
     /// triangle as indices into `vertices` and `colors` vectors, as follows:
     /// (vertex0, vertex1, vertex2, color)
     triangles: Vec<(usize, usize, usize, usize)>,
-    #[serde(skip)]
-    faces: Option<Vec<Face>>,
 }
 
 impl Face {
@@ -57,11 +58,10 @@ impl Mesh {
             colors,
             vertices,
             triangles,
-            faces: None,
         }
     }
 
-    fn build_faces(&self) -> Vec<Face> {
+    pub fn get_faces(&self, transform: Transform) -> Vec<Face> {
         let colors: Vec<Color> = self
             .colors
             .iter()
@@ -73,24 +73,22 @@ impl Mesh {
 
         let mut faces = Vec::with_capacity(self.triangles.len());
 
+        let vertices: Vec<Vertex> = self
+            .vertices
+            .iter()
+            .map(|coords| transform.apply(Vertex::from(*coords)))
+            .collect();
+
         for indices in &self.triangles {
             let face = Face::new(
-                Vertex::from(self.vertices[indices.0]),
-                Vertex::from(self.vertices[indices.1]),
-                Vertex::from(self.vertices[indices.2]),
+                vertices[indices.0].clone(),
+                vertices[indices.1].clone(),
+                vertices[indices.2].clone(),
                 colors[indices.3],
             );
             faces.push(face);
         }
 
         faces
-    }
-
-    pub fn get_faces(&mut self) -> &Vec<Face> {
-        if self.faces.is_none() {
-            self.faces = Some(self.build_faces());
-        }
-
-        self.faces.as_ref().unwrap()
     }
 }

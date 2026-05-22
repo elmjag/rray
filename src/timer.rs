@@ -1,40 +1,41 @@
 use std::time::{Duration, Instant};
 
-pub struct FpsTimer {
+pub struct Timer {
+    /// global rendering time start
+    start: Instant,
     /// when rendering of last frame started
-    last_frame: Option<Instant>,
+    frame_start: Option<Instant>,
     /// time budget for rendering a frame,
     /// given our FPS target
     frame_time: Duration,
 }
 
-impl FpsTimer {
+impl Timer {
     pub fn new(fps_target: f32) -> Self {
         let frame_time = (1.0 / fps_target) * 1000.0;
 
         Self {
-            last_frame: None,
+            start: Instant::now(),
+            frame_start: None,
             frame_time: Duration::from_millis(frame_time as u64),
         }
     }
 
-    pub fn get_frame_delta(&mut self) -> Duration {
-        let time_delta = match self.last_frame {
-            Some(last) => last.elapsed(),
-            None => Duration::from_secs(0),
-        };
-
-        self.last_frame = Some(Instant::now());
-
-        time_delta
+    /// get current global rendering time
+    pub fn elapsed_time(&self) -> Duration {
+        self.start.elapsed()
     }
 
-    pub fn get_fps_sleep(&self) -> u32 {
-        if self.last_frame.is_none() {
+    pub fn start_frame(&mut self) {
+        self.frame_start = Some(Instant::now());
+    }
+
+    pub fn remaining_frame_time(&self) -> u32 {
+        if self.frame_start.is_none() {
             return 0;
         }
 
-        let elapsed = self.last_frame.unwrap().elapsed();
+        let elapsed = self.frame_start.unwrap().elapsed();
 
         let sleep_time = if elapsed >= self.frame_time {
             0

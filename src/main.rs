@@ -3,7 +3,7 @@ use rray::loader::load_scene;
 use rray::mesh::Mesh;
 use rray::pump::Pump;
 use rray::render::draw_frame;
-use rray::timer::FpsTimer;
+use rray::timer::Timer;
 use rray::window::WindowCanvas;
 use rray::{args, ppm::PpmCanvas};
 use std::path::PathBuf;
@@ -24,16 +24,11 @@ fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
     let (width, height) = camera.canvas_size();
     let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", SCALE, width, height);
     let mut pump = Pump::init(&sdl_context);
+    let mut timer = Timer::new(FPS);
 
-    let mut fps_timer = FpsTimer::new(FPS);
-
-    while !pump.terminated(&fps_timer) {
-        draw_frame(
-            &mut canvas,
-            &mut camera,
-            &mut mesh,
-            fps_timer.get_frame_delta(),
-        );
+    while !pump.terminated(&timer) {
+        timer.start_frame();
+        draw_frame(&mut canvas, &mut camera, &mut mesh, timer.elapsed_time());
     }
 }
 

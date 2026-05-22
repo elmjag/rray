@@ -4,6 +4,9 @@ use crate::{
     intersect::ray_triangle_intersection,
     mesh::{Face, Mesh},
     ray::Ray,
+    rotation::Rotation,
+    space::Vector,
+    transform::Transform,
 };
 use core::f32;
 use sdl2::pixels::Color;
@@ -31,6 +34,12 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
     }
 }
 
+fn get_transform(elapsed_time: Duration) -> Transform {
+    let z_axis = Vector::new(0.0, 0.0, 1.0);
+    let rotation_angle = (elapsed_time.as_millis() % 6283) as f32 / 1000.0;
+    Transform::new(Rotation::new(rotation_angle, &z_axis))
+}
+
 ///
 /// Draw a mesh to provided canvas.
 ///
@@ -41,12 +50,11 @@ pub fn draw_frame(
     canvas: &mut impl RenderCanvas,
     camera: &Camera,
     mesh: &mut Mesh,
-    frame_delta: Duration,
+    elapsed_time: Duration,
 ) {
-    let faces = mesh.get_faces();
+    let transform = get_transform(elapsed_time);
+    let faces = mesh.get_faces(transform);
     let (w, h) = camera.canvas_size();
-
-    println!("delta {:?}", frame_delta);
 
     canvas.clear(CLEAR_COLOR);
 
