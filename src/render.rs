@@ -5,8 +5,9 @@ use crate::{
     mesh::{Face, Mesh},
     ray::Ray,
     rotation::Rotation,
-    space::Vector,
+    space::Z_AXIS,
     transform::Transform,
+    translation::Translation,
 };
 use core::f32;
 use sdl2::pixels::Color;
@@ -35,16 +36,19 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
 }
 
 fn get_transform(elapsed_time: Duration) -> Transform {
-    let z_axis = Vector::new(0.0, 0.0, 1.0);
-    let rotation_angle = (elapsed_time.as_millis() % 6283) as f32 / 1000.0;
-    Transform::new(Rotation::new(rotation_angle, &z_axis))
+    let elapsed_ms = elapsed_time.as_millis();
+
+    let rotation_angle = (elapsed_ms % 6283) as f32 / 1000.0;
+    let x_translation = ((elapsed_ms % 2000) as i64) as f32 / 1000.0;
+
+    Transform::new(
+        Translation::new(x_translation, 0.0, 0.0),
+        Rotation::new(rotation_angle, &Z_AXIS),
+    )
 }
 
 ///
 /// Draw a mesh to provided canvas.
-///
-/// `frame_delta` is the time elapsed since last frame was drawn.
-///
 ///
 pub fn draw_frame(
     canvas: &mut impl RenderCanvas,

@@ -1,6 +1,9 @@
 use crate::math::is_close;
 use std::ops::Sub;
 
+pub const Z_AXIS: Vector = Vector::new(0.0, 0.0, 1.0);
+pub const ZERO_VECTOR: Vector = Vector::new(0.0, 0.0, 0.0);
+
 #[derive(Debug, PartialEq)]
 pub struct Vector {
     x: f32,
@@ -9,7 +12,7 @@ pub struct Vector {
 }
 
 impl Vector {
-    pub fn new(x: f32, y: f32, z: f32) -> Vector {
+    pub const fn new(x: f32, y: f32, z: f32) -> Vector {
         Vector { x, y, z }
     }
 

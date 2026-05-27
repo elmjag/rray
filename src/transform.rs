@@ -1,16 +1,19 @@
-use crate::{rotation::Rotation, space::Vertex};
+use crate::{rotation::Rotation, space::Vertex, translation::Translation};
 
 pub struct Transform {
-    // currently only rotation supported
+    translation: Translation,
     rotation: Rotation,
 }
 
 impl Transform {
-    pub fn new(rotation: Rotation) -> Self {
-        Self { rotation }
+    pub fn new(translation: Translation, rotation: Rotation) -> Self {
+        Self {
+            translation,
+            rotation,
+        }
     }
 
     pub fn apply(&self, vertex: Vertex) -> Vertex {
-        self.rotation.apply(&vertex)
+        self.translation.apply(self.rotation.apply(&vertex))
     }
 }

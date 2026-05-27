@@ -14,4 +14,5 @@ pub mod rotation;
 pub mod space;
 pub mod timer;
 pub mod transform;
+pub mod translation;
 pub mod window;
