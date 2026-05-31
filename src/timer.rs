@@ -1,33 +1,32 @@
-use std::time::{Duration, Instant};
+use sdl2::{Sdl, TimerSubsystem};
 
 pub struct Timer {
-    /// global rendering time start
-    start: Instant,
+    sdl_timer: TimerSubsystem,
     /// when rendering of last frame started
-    frame_start: Option<Instant>,
+    frame_start: Option<u32>,
     /// time budget for rendering a frame,
     /// given our FPS target
-    frame_time: Duration,
+    frame_time: u32,
 }
 
 impl Timer {
-    pub fn new(fps_target: f32) -> Self {
+    pub fn new(sdl_context: &Sdl, fps_target: f32) -> Self {
         let frame_time = (1.0 / fps_target) * 1000.0;
 
         Self {
-            start: Instant::now(),
+            sdl_timer: sdl_context.timer().unwrap(),
             frame_start: None,
-            frame_time: Duration::from_millis(frame_time as u64),
+            frame_time: frame_time as u32,
         }
     }
 
     /// get current global rendering time
-    pub fn elapsed_time(&self) -> Duration {
-        self.start.elapsed()
+    pub fn elapsed_time(&self) -> u32 {
+        self.sdl_timer.ticks()
     }
 
     pub fn start_frame(&mut self) {
-        self.frame_start = Some(Instant::now());
+        self.frame_start = Some(self.sdl_timer.ticks());
     }
 
     pub fn remaining_frame_time(&self) -> u32 {
@@ -35,14 +34,13 @@ impl Timer {
             return 0;
         }
 
-        let elapsed = self.frame_start.unwrap().elapsed();
+        let frame_finished = self.frame_start.unwrap() + self.frame_time;
+        let now = self.elapsed_time();
 
-        let sleep_time = if elapsed >= self.frame_time {
+        if frame_finished <= now {
             0
         } else {
-            (self.frame_time - elapsed).as_millis() as u32
-        };
-
-        sleep_time
+            frame_finished - now
+        }
     }
 }

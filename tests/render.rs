@@ -1,6 +1,5 @@
 use sdl2::pixels::Color;
 use std::collections::HashSet;
-use std::time::Duration;
 
 use rray::{camera::Camera, canvas::RenderCanvas, mesh::Mesh, render};
 
@@ -180,7 +179,7 @@ fn draw_frame() {
         (14, 12, Color::GREEN),
     ]);
 
-    render::draw_frame(&mut canvas, &camera, &mut mesh, Duration::from_secs(0));
+    render::draw_frame(&mut canvas, &camera, &mut mesh, 0);
 
     assert_eq!(canvas.pixels, expected_pixels);
 }

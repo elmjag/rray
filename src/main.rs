@@ -8,7 +8,6 @@ use rray::window::WindowCanvas;
 use rray::{args, ppm::PpmCanvas};
 use std::path::PathBuf;
 use std::process::ExitCode;
-use std::time::Duration;
 
 const FPS: f32 = 25.0;
 const SCALE: u32 = 16;
@@ -16,7 +15,7 @@ const SCALE: u32 = 16;
 fn render_to_ppm(file: PathBuf, mut camera: Camera, mut mesh: Mesh) {
     let (width, height) = camera.canvas_size();
     let mut canvas = PpmCanvas::new(file, width, height);
-    draw_frame(&mut canvas, &mut camera, &mut mesh, Duration::from_secs(0));
+    draw_frame(&mut canvas, &mut camera, &mut mesh, 0);
 }
 
 fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
@@ -24,7 +23,7 @@ fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
     let (width, height) = camera.canvas_size();
     let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", SCALE, width, height);
     let mut pump = Pump::init(&sdl_context);
-    let mut timer = Timer::new(FPS);
+    let mut timer = Timer::new(&sdl_context, FPS);
 
     while !pump.terminated(&timer) {
         timer.start_frame();

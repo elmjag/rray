@@ -11,7 +11,6 @@ use crate::{
 };
 use core::f32;
 use sdl2::pixels::Color;
-use std::time::Duration;
 
 const CLEAR_COLOR: Color = Color::WHITE;
 
@@ -35,11 +34,9 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
     }
 }
 
-fn get_transform(elapsed_time: Duration) -> Transform {
-    let elapsed_ms = elapsed_time.as_millis();
-
-    let rotation_angle = (elapsed_ms % 6283) as f32 / 1000.0;
-    let x_translation = ((elapsed_ms % 2000) as i64) as f32 / 1000.0;
+fn get_transform(elapsed_time: u32) -> Transform {
+    let rotation_angle = (elapsed_time % 6283) as f32 / 1000.0;
+    let x_translation = ((elapsed_time % 2000) as i64) as f32 / 1000.0;
 
     Transform::new(
         Translation::new(x_translation, 0.0, 0.0),
@@ -54,7 +51,7 @@ pub fn draw_frame(
     canvas: &mut impl RenderCanvas,
     camera: &Camera,
     mesh: &mut Mesh,
-    elapsed_time: Duration,
+    elapsed_time: u32,
 ) {
     let transform = get_transform(elapsed_time);
     let faces = mesh.get_faces(transform);
