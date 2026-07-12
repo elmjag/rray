@@ -1,7 +1,9 @@
+use rray::{
+    camera::Camera, canvas::RenderCanvas, mesh::Mesh, render, rotation::Rotation, space::Z_AXIS,
+    transform::Transform, translation::Translation,
+};
 use sdl2::pixels::Color;
 use std::collections::HashSet;
-
-use rray::{camera::Camera, canvas::RenderCanvas, mesh::Mesh, render};
 
 const WIDTH: u32 = 24;
 const HEIGHT: u32 = 24;
@@ -179,7 +181,12 @@ fn draw_frame() {
         (14, 12, Color::GREEN),
     ]);
 
-    render::draw_frame(&mut canvas, &camera, &mut mesh, 0);
+    render::draw_frame(
+        &mut canvas,
+        &camera,
+        &mut mesh,
+        Transform::new(Translation::new(0.0, 0.0, 0.0), Rotation::new(0.0, &Z_AXIS)),
+    );
 
     assert_eq!(canvas.pixels, expected_pixels);
 }

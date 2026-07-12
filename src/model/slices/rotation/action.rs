@@ -1,0 +1,30 @@
+use super::slice::{Direction, RotationSlice};
+use crate::redux::{ActionVariant, BoxedActionVariant, Dispatcher, State};
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum RotationMotion {
+    Left,
+    Right,
+    Stop,
+}
+
+pub struct RotationAction {
+    action: RotationMotion,
+}
+
+impl ActionVariant for RotationAction {
+    fn reduce(&self, timestamp: u32, state: &mut State, _: &mut Dispatcher) {
+        let slice = state.get_slice_mut::<RotationSlice>("rotation");
+        match self.action {
+            RotationMotion::Left => slice.start_rotation(timestamp, Direction::Positive),
+            RotationMotion::Right => slice.start_rotation(timestamp, Direction::Negative),
+            RotationMotion::Stop => slice.stop_rotation(timestamp),
+        };
+    }
+}
+
+impl RotationAction {
+    pub fn new(direction: RotationMotion) -> BoxedActionVariant {
+        Box::new(Self { action: direction })
+    }
+}
