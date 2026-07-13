@@ -23,20 +23,30 @@ fn vertices(segments: usize, radius: f32, height: f32) -> Vec<(f32, f32, f32)> {
         (x, y, bottom_z)
     });
 
-    let mut verts = vec![(0.0, 0.0, top_z)];
+    let mut verts = vec![(0.0, 0.0, bottom_z), (0.0, 0.0, top_z)];
     verts.append(&mut r.collect());
 
     verts
 }
 
 fn triangles(num_verts: usize) -> Vec<(usize, usize, usize, usize)> {
-    let triangles = (0..num_verts - 1).map(|n| {
-        let last = if n == 0 { num_verts - 1 } else { n };
+    let top_triangles = (2..num_verts).map(|n| {
         let color = n % 4;
-        (0, n + 1, last, color)
+        let prev = if n == 2 { num_verts - 1 } else { n - 1 };
+        let verts = (1, n, prev, color);
+
+        verts
     });
 
-    triangles.collect()
+    let bottom_triangles = (2..num_verts).map(|n| {
+        let color = 4 + n % 2;
+        let prev = if n == 2 { num_verts - 1 } else { n - 1 };
+        let verts = (0, prev, n, color);
+
+        verts
+    });
+
+    top_triangles.chain(bottom_triangles).collect()
 }
 
 pub fn get_mesh() -> Mesh {
@@ -45,6 +55,8 @@ pub fn get_mesh() -> Mesh {
         Color::GREEN.rgb(),
         Color::BLUE.rgb(),
         Color::YELLOW.rgb(),
+        Color::BLACK.rgb(),
+        Color::GRAY.rgb(),
     ];
     let vertices = vertices(PYRAMID_SEGMENTS, PYRAMID_RADIUS, PYRAMID_HEIGHT);
     let triangles = triangles(vertices.len());
