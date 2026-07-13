@@ -4,7 +4,7 @@ use std::f32::consts::TAU;
 
 const PYRAMID_SEGMENTS: usize = 8;
 const PYRAMID_RADIUS: f32 = 2.0;
-const PYRAMID_HEIGHT: f32 = 8.0;
+const PYRAMID_HEIGHT: f32 = 4.0;
 
 const CANVAS_WIDTH: u32 = 64;
 const CANVAS_HEIGHT: u32 = 64;
@@ -12,16 +12,18 @@ const CAMERA_DEPTH: f32 = 64.0;
 
 fn vertices(segments: usize, radius: f32, height: f32) -> Vec<(f32, f32, f32)> {
     let angle_step = TAU / (segments as f32);
+    let bottom_z = height / -2.0;
+    let top_z = height / 2.0;
 
     let r = (0..segments).map(|n| {
         let angle = angle_step * (n as f32);
         let x = angle.cos() * radius;
         let y = angle.sin() * radius;
 
-        (x, y, height)
+        (x, y, bottom_z)
     });
 
-    let mut verts = vec![(0.0, 0.0, height)];
+    let mut verts = vec![(0.0, 0.0, top_z)];
     verts.append(&mut r.collect());
 
     verts

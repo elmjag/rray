@@ -24,7 +24,7 @@ fn get_rotation(state: &State) -> Rotation {
 }
 
 fn get_transform(state: &State) -> Transform {
-    Transform::new(Translation::new(0.0, 0.0, 0.0), get_rotation(state))
+    Transform::new(Translation::new(0.0, 0.0, -8.0), get_rotation(state))
 }
 
 fn get_terminated(state: &State) -> bool {
