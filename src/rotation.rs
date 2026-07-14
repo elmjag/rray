@@ -2,6 +2,7 @@ use crate::{
     quaternion::Quaternion,
     space::{Vector, Vertex},
 };
+use std::ops::Mul;
 
 pub struct Rotation {
     rotor: Quaternion,
@@ -47,5 +48,27 @@ impl Rotation {
         let r = &t * &self.inv_rotor;
 
         r.into()
+    }
+}
+
+///
+/// Combines two rotations as follows:
+///
+/// lhs * rhs = res
+///
+/// res is the resultion rotation of
+/// first applying lhs rotation and then rhs rotation
+///
+impl Mul for &Rotation {
+    type Output = Rotation;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        let rotor = &self.rotor * &rhs.rotor;
+        let inv_rotor = rotor.inverse();
+
+        Rotation {
+            rotor: rotor,
+            inv_rotor: inv_rotor,
+        }
     }
 }

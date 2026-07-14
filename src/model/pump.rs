@@ -52,7 +52,7 @@ fn handle_key_event(event: Event, store: &mut Store) {
 
     let key = key.unwrap();
     match key {
-        Keycode::Left | Keycode::Right => {
+        Keycode::Left | Keycode::Right | Keycode::Up | Keycode::Down => {
             store.dispatch(timestamp, KeyInputAction::new(key, motion))
         }
         Keycode::Escape => store.dispatch(timestamp, QuitApplicationAction::new()),

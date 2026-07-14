@@ -1,6 +1,6 @@
 use super::rotation::{
-    action::{RotationAction, RotationMotion},
-    slice::{Direction, Motion, RotationSlice},
+    action::{Axis, Change, RotationAction},
+    slice::Direction,
 };
 use crate::redux::{ActionVariant, BoxedActionVariant, Dispatcher, State};
 use sdl2::keyboard::Keycode;
@@ -16,10 +16,10 @@ pub struct KeyInputAction {
 }
 
 impl ActionVariant for KeyInputAction {
-    fn reduce(&self, timestamp: u32, state: &mut State, dispatcher: &mut Dispatcher) {
+    fn reduce(&self, timestamp: u32, _state: &mut State, dispatcher: &mut Dispatcher) {
         match self.motion {
             KeyMotion::Down => handle_key_down(dispatcher, timestamp, self.key),
-            KeyMotion::Up => handle_key_up(state, dispatcher, timestamp, self.key),
+            KeyMotion::Up => handle_key_up(dispatcher, timestamp, self.key),
         }
     }
 }
@@ -30,29 +30,30 @@ impl KeyInputAction {
     }
 }
 
-fn handle_key_down(dispatcher: &mut Dispatcher, timestamp: u32, key: Keycode) {
-    let direction = match key {
-        Keycode::Left => RotationMotion::Left,
-        Keycode::Right => RotationMotion::Right,
+fn key_to_axis_direction(key: Keycode) -> (Axis, Direction) {
+    match key {
+        Keycode::Left => (Axis::Z, Direction::Positive),
+        Keycode::Right => (Axis::Z, Direction::Negative),
+        Keycode::Up => (Axis::X, Direction::Positive),
+        Keycode::Down => (Axis::X, Direction::Negative),
         _ => panic!("unexpected keycode"),
-    };
-    dispatcher.dispatch(timestamp, RotationAction::new(direction));
+    }
 }
 
-fn handle_key_up(state: &mut State, dispatcher: &mut Dispatcher, timestamp: u32, key: Keycode) {
-    let expected_dir = match key {
-        Keycode::Left => Direction::Positive,
-        Keycode::Right => Direction::Negative,
-        _ => panic!("unexpected keycode"),
-    };
+fn handle_key_down(dispatcher: &mut Dispatcher, timestamp: u32, key: Keycode) {
+    let (axis, direction) = key_to_axis_direction(key);
 
-    let rotation = state.get_slice::<RotationSlice>("rotation");
+    dispatcher.dispatch(
+        timestamp,
+        RotationAction::new(axis, direction, Change::Start),
+    );
+}
 
-    if let Motion::Rotating { direction, .. } = rotation.motion()
-        && direction == expected_dir
-    {
-        // only dispatch 'stop rotation' action, when
-        // released key is the one the started rotation
-        dispatcher.dispatch(timestamp, RotationAction::new(RotationMotion::Stop));
-    }
+fn handle_key_up(dispatcher: &mut Dispatcher, timestamp: u32, key: Keycode) {
+    let (axis, direction) = key_to_axis_direction(key);
+
+    dispatcher.dispatch(
+        timestamp,
+        RotationAction::new(axis, direction, Change::Stop),
+    );
 }

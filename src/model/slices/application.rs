@@ -1,10 +1,13 @@
-use crate::redux::{ActionVariant, BoxedActionVariant, BoxedSlice, Dispatcher, Slice, State};
+use crate::{
+    model::slices,
+    redux::{ActionVariant, BoxedActionVariant, BoxedSlice, Dispatcher, Slice, State},
+};
 
 pub struct QuitApplicationAction {}
 
 impl ActionVariant for QuitApplicationAction {
     fn reduce(&self, timestamp: u32, state: &mut State, _dispatcher: &mut Dispatcher) {
-        let app_slice = state.get_slice_mut::<ApplicationSlice>("application");
+        let app_slice = state.get_slice_mut::<ApplicationSlice>(slices::APPLICATION);
         app_slice.set_terminated(timestamp);
     }
 }
