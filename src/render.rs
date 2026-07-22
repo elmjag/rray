@@ -16,12 +16,10 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
     let mut nearest_face = None;
 
     for face in faces {
-        let r = ray_triangle_intersection(ray, face);
+        let r = ray_triangle_intersection(ray, face, last_t);
         if let Some(t) = r {
-            if t < last_t {
-                last_t = t;
-                nearest_face = Some(face);
-            }
+            last_t = t;
+            nearest_face = Some(face);
         }
     }
 

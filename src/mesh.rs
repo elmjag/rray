@@ -30,6 +30,20 @@ impl Face {
     }
 
     ///
+    /// vertex 1
+    ///
+    pub fn v1(&self) -> &Vertex {
+        &self.1
+    }
+
+    ///
+    /// vertex 2
+    ///
+    pub fn v2(&self) -> &Vertex {
+        &self.2
+    }
+
+    ///
     /// side A vector
     ///
     pub fn v0v1(&self) -> Vector {

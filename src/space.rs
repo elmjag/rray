@@ -1,5 +1,5 @@
 use crate::math::is_close;
-use std::ops::Sub;
+use std::ops::{Index, Sub};
 
 pub const Z_AXIS: Vector = Vector::new(0.0, 0.0, 1.0);
 pub const ZERO_VECTOR: Vector = Vector::new(0.0, 0.0, 0.0);
@@ -11,9 +11,40 @@ pub struct Vector {
     z: f32,
 }
 
+#[derive(Clone, Copy)]
+pub enum Axis {
+    X,
+    Y,
+    Z,
+}
+
+impl Index<Axis> for Vector {
+    type Output = f32;
+
+    fn index(&self, index: Axis) -> &Self::Output {
+        self.get_axis_val(index)
+    }
+}
+
+impl Index<Axis> for &Vector {
+    type Output = f32;
+
+    fn index(&self, index: Axis) -> &Self::Output {
+        self.get_axis_val(index)
+    }
+}
+
 impl Vector {
     pub const fn new(x: f32, y: f32, z: f32) -> Vector {
         Vector { x, y, z }
+    }
+
+    fn get_axis_val(&self, index: Axis) -> &f32 {
+        match index {
+            Axis::X => &self.x,
+            Axis::Y => &self.y,
+            Axis::Z => &self.z,
+        }
     }
 
     ///
