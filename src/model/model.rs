@@ -15,7 +15,6 @@ use sdl2::Sdl;
 pub struct Model {
     pump: Pump,
     store: Store,
-    terminated: bool,
 }
 
 fn get_rotation(state: &State) -> Rotation {
@@ -48,21 +47,18 @@ impl Model {
 
         Self {
             pump: Pump::new(sdl_context),
-            terminated: false,
             store,
         }
     }
 
-    pub fn process_events(&mut self, fps_timer: &Timer) -> Transform {
-        self.pump.pump_events(&mut self.store, fps_timer);
+    pub fn get_state(&mut self, fps_timer: &Timer) -> (Transform, bool) {
+        let snapshot = self.store.get_snapshot(fps_timer.elapsed_time());
 
-        let snapshot = self.store.process(fps_timer.elapsed_time());
-        self.terminated = get_terminated(&snapshot);
-
-        get_transform(&snapshot)
+        (get_transform(&snapshot), get_terminated(&snapshot))
     }
 
-    pub fn application_terminated(&self) -> bool {
-        self.terminated
+    pub fn process_events(&mut self, fps_timer: &Timer) {
+        self.pump.pump_events(&mut self.store, fps_timer);
+        self.store.process();
     }
 }

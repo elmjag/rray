@@ -24,10 +24,16 @@ fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
     let mut model = Model::new(&sdl_context);
     let mut timer = Timer::new(&sdl_context, FPS);
 
-    while !model.application_terminated() {
+    loop {
         timer.start_frame();
-        let transform = model.process_events(&timer);
+        let (transform, terminated) = model.get_state(&timer);
+
         draw_frame(&mut canvas, &mut camera, &mut mesh, transform);
+        model.process_events(&timer);
+
+        if terminated {
+            break;
+        }
     }
 }
 

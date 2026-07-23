@@ -40,11 +40,13 @@ impl Store {
         }
     }
 
-    pub fn process(&mut self, timestamp: u32) -> State {
+    pub fn get_snapshot(&self, timestamp: u32) -> State {
+        self.state.get_snapshot(timestamp)
+    }
+
+    pub fn process(&mut self) {
         while !self.pending_actions.is_empty() {
             self.process_next_action();
         }
-
-        self.state.get_snapshot(timestamp)
     }
 }
