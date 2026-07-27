@@ -7,7 +7,6 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 
 const FPS: f32 = 25.0;
-const SCALE: u32 = 16;
 
 fn render_to_ppm(file: PathBuf, mut camera: Camera, mut mesh: Mesh) {
     let (width, height) = camera.canvas_size();
@@ -17,18 +16,20 @@ fn render_to_ppm(file: PathBuf, mut camera: Camera, mut mesh: Mesh) {
     draw_frame(&mut canvas, &mut camera, &mut mesh, transform);
 }
 
-fn render_to_screen(mut camera: Camera, mut mesh: Mesh) {
+fn render_to_screen(mut camera: Camera, mut mesh: Mesh, scale: u32, show_fps_stats: bool) {
     let sdl_context = sdl2::init().unwrap();
     let (width, height) = camera.canvas_size();
-    let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", SCALE, width, height);
+    let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", scale, width, height);
     let mut model = Model::new(&sdl_context);
-    let mut timer = Timer::new(&sdl_context, FPS);
+    let mut timer = Timer::new(&sdl_context, FPS, show_fps_stats);
 
     loop {
         timer.start_frame();
         let (transform, terminated) = model.get_state(&timer);
 
         draw_frame(&mut canvas, &mut camera, &mut mesh, transform);
+        timer.rendering_finished();
+
         model.process_events(&timer);
 
         if terminated {
@@ -51,7 +52,7 @@ pub fn main() -> ExitCode {
     if let Some(file) = args.out {
         render_to_ppm(file, camera, mesh);
     } else {
-        render_to_screen(camera, mesh);
+        render_to_screen(camera, mesh, args.scale, args.fps_stats);
     }
 
     ExitCode::SUCCESS

@@ -6,9 +6,9 @@ const PYRAMID_SEGMENTS: usize = 8;
 const PYRAMID_RADIUS: f32 = 2.0;
 const PYRAMID_HEIGHT: f32 = 4.0;
 
-const CANVAS_WIDTH: u32 = 64;
-const CANVAS_HEIGHT: u32 = 64;
-const CAMERA_DEPTH: f32 = 64.0;
+const CANVAS_WIDTH: u32 = 256;
+const CANVAS_HEIGHT: u32 = 192;
+const CAMERA_DEPTH: f32 = 128.0;
 
 fn vertices(segments: usize, radius: f32, height: f32) -> Vec<(f32, f32, f32)> {
     let angle_step = TAU / (segments as f32);

@@ -52,7 +52,7 @@ impl Model {
     }
 
     pub fn get_state(&mut self, fps_timer: &Timer) -> (Transform, bool) {
-        let snapshot = self.store.get_snapshot(fps_timer.elapsed_time());
+        let snapshot = self.store.get_snapshot(fps_timer.current_time());
 
         (get_transform(&snapshot), get_terminated(&snapshot))
     }
