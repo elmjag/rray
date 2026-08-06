@@ -1,6 +1,13 @@
 use rray::{
-    camera::Camera, canvas::RenderCanvas, mesh::Mesh, render, rotation::Rotation, space::Z_AXIS,
-    transform::Transform, translation::Translation,
+    camera::Camera,
+    canvas::RenderCanvas,
+    mesh::Mesh,
+    render,
+    rotation::Rotation,
+    scene::{Object, Scene},
+    space::Z_AXIS,
+    transform::Transform,
+    translation::Translation,
 };
 use sdl2::pixels::Color;
 use std::collections::HashSet;
@@ -64,7 +71,13 @@ fn draw_frame() {
     //
     let mut canvas = TestCanvas::new();
     let camera = Camera::new(WIDTH, HEIGHT, DEPTH);
-    let mut mesh = get_mesh();
+    let mesh = get_mesh();
+    let transform = Transform::new(Translation::new(0.0, 0.0, 0.0), Rotation::new(0.0, &Z_AXIS));
+
+    render::draw_frame(
+        &mut canvas,
+        Scene::new(&camera, Object::new(&mesh, transform)),
+    );
 
     let expected_pixels = HashSet::from([
         (13, 13, Color::GREEN),
@@ -180,13 +193,6 @@ fn draw_frame() {
         (9, 6, Color::RED),
         (14, 12, Color::GREEN),
     ]);
-
-    render::draw_frame(
-        &mut canvas,
-        &camera,
-        &mut mesh,
-        Transform::new(Translation::new(0.0, 0.0, 0.0), Rotation::new(0.0, &Z_AXIS)),
-    );
 
     assert_eq!(canvas.pixels, expected_pixels);
 }

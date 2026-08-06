@@ -12,6 +12,7 @@ pub mod ray;
 pub mod redux;
 pub mod render;
 pub mod rotation;
+pub mod scene;
 pub mod space;
 pub mod timer;
 pub mod transform;

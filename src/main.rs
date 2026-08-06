@@ -1,33 +1,30 @@
 use rray::{
-    args, camera::Camera, loader::load_scene, mesh::Mesh, model::Model, ppm::PpmCanvas,
-    render::draw_frame, rotation::Rotation, space::Z_AXIS, timer::Timer, transform::Transform,
-    translation::Translation, window::WindowCanvas,
+    args, model::Model, ppm::PpmCanvas, render::draw_frame, timer::Timer, window::WindowCanvas,
 };
+use sdl2::Sdl;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
 const FPS: f32 = 25.0;
 
-fn render_to_ppm(file: PathBuf, mut camera: Camera, mut mesh: Mesh) {
-    let (width, height) = camera.canvas_size();
+fn render_to_ppm(file: PathBuf, mut model: Model) {
+    let (width, height) = model.canvas_size();
     let mut canvas = PpmCanvas::new(file, width, height);
-    let transform = Transform::new(Translation::new(0.0, 0.0, 0.0), Rotation::new(0.0, &Z_AXIS));
+    let (scene, _) = model.get_scene(0);
 
-    draw_frame(&mut canvas, &mut camera, &mut mesh, transform);
+    draw_frame(&mut canvas, scene);
 }
 
-fn render_to_screen(mut camera: Camera, mut mesh: Mesh, scale: u32, show_fps_stats: bool) {
-    let sdl_context = sdl2::init().unwrap();
-    let (width, height) = camera.canvas_size();
+fn render_to_screen(sdl_context: Sdl, mut model: Model, scale: u32, show_fps_stats: bool) {
+    let (width, height) = model.canvas_size();
     let mut canvas = WindowCanvas::init(&sdl_context, "rusty rays", scale, width, height);
-    let mut model = Model::new(&sdl_context);
     let mut timer = Timer::new(&sdl_context, FPS, show_fps_stats);
 
     loop {
         timer.start_frame();
-        let (transform, terminated) = model.get_state(&timer);
+        let (scene, terminated) = model.get_scene(timer.current_time());
 
-        draw_frame(&mut canvas, &mut camera, &mut mesh, transform);
+        draw_frame(&mut canvas, scene);
         timer.rendering_finished();
 
         model.process_events(&timer);
@@ -41,8 +38,10 @@ fn render_to_screen(mut camera: Camera, mut mesh: Mesh, scale: u32, show_fps_sta
 pub fn main() -> ExitCode {
     let args = args::parse();
 
-    let (camera, mesh) = match load_scene(args.scene) {
-        Ok(x) => x,
+    let sdl_context = sdl2::init().unwrap();
+
+    let model = match Model::new(&sdl_context, args.scene) {
+        Ok(model) => model,
         Err(err) => {
             eprintln!("Failed to load scene file: {err}");
             return ExitCode::FAILURE;
@@ -50,9 +49,9 @@ pub fn main() -> ExitCode {
     };
 
     if let Some(file) = args.out {
-        render_to_ppm(file, camera, mesh);
+        render_to_ppm(file, model);
     } else {
-        render_to_screen(camera, mesh, args.scale, args.fps_stats);
+        render_to_screen(sdl_context, model, args.scale, args.fps_stats);
     }
 
     ExitCode::SUCCESS

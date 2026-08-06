@@ -75,7 +75,7 @@ impl Mesh {
         }
     }
 
-    pub fn get_faces(&self, transform: Transform) -> Vec<Face> {
+    pub fn get_faces(&self, transform: &Transform) -> Vec<Face> {
         let colors: Vec<Color> = self
             .colors
             .iter()

@@ -1,10 +1,5 @@
 use crate::{
-    camera::Camera,
-    canvas::RenderCanvas,
-    intersect::ray_triangle_intersection,
-    mesh::{Face, Mesh},
-    ray::Ray,
-    transform::Transform,
+    canvas::RenderCanvas, intersect::ray_triangle_intersection, mesh::Face, ray::Ray, scene::Scene,
 };
 use core::f32;
 use sdl2::pixels::Color;
@@ -32,13 +27,9 @@ fn find_first_ray_hit(ray: &Ray, faces: &Vec<Face>) -> Option<Color> {
 ///
 /// Draw a mesh to provided canvas.
 ///
-pub fn draw_frame(
-    canvas: &mut impl RenderCanvas,
-    camera: &Camera,
-    mesh: &mut Mesh,
-    transform: Transform,
-) {
-    let faces = mesh.get_faces(transform);
+pub fn draw_frame(canvas: &mut impl RenderCanvas, scene: Scene) {
+    let camera = scene.camera();
+    let faces = scene.object().get_faces();
     let (w, h) = camera.canvas_size();
 
     canvas.clear(CLEAR_COLOR);

@@ -3,18 +3,25 @@ use super::{
     slices::{self, application::ApplicationSlice, rotation::slice::RotationSlice},
 };
 use crate::{
+    camera::Camera,
+    loader,
+    mesh::Mesh,
     redux::{State, Store},
     rotation::Rotation,
+    scene::{Object, Scene},
     space::Vector,
     timer::Timer,
     transform::Transform,
     translation::Translation,
 };
 use sdl2::Sdl;
+use std::path::PathBuf;
 
 pub struct Model {
     pump: Pump,
     store: Store,
+    camera: Camera,
+    mesh: Mesh,
 }
 
 fn get_rotation(state: &State) -> Rotation {
@@ -38,23 +45,35 @@ fn get_terminated(state: &State) -> bool {
 }
 
 impl Model {
-    pub fn new(sdl_context: &Sdl) -> Self {
+    pub fn new(sdl_context: &Sdl, scene_file: Option<PathBuf>) -> Result<Self, String> {
         let store = Store::new(vec![
             (slices::ROTATION_X, RotationSlice::new()),
             (slices::ROTATION_Z, RotationSlice::new()),
             (slices::APPLICATION, ApplicationSlice::new()),
         ]);
 
-        Self {
+        let (camera, mesh) = loader::load_scene(scene_file)?;
+
+        Ok(Self {
             pump: Pump::new(sdl_context),
             store,
-        }
+            camera,
+            mesh,
+        })
     }
 
-    pub fn get_state(&mut self, fps_timer: &Timer) -> (Transform, bool) {
-        let snapshot = self.store.get_snapshot(fps_timer.current_time());
+    pub fn canvas_size(&self) -> (u32, u32) {
+        self.camera.canvas_size()
+    }
 
-        (get_transform(&snapshot), get_terminated(&snapshot))
+    pub fn get_scene(&mut self, timestamp: u32) -> (Scene<'_>, bool) {
+        let snapshot = self.store.get_snapshot(timestamp);
+        let transform = get_transform(&snapshot);
+
+        let object = Object::new(&self.mesh, transform);
+        let scene = Scene::new(&self.camera, object);
+
+        (scene, get_terminated(&snapshot))
     }
 
     pub fn process_events(&mut self, fps_timer: &Timer) {
