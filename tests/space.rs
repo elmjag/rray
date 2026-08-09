@@ -38,11 +38,14 @@ fn vector_cross_product() {
 /// test vector norm calculation
 ///
 #[test]
-fn vector_norm() {
-    assert!(is_close(Vector::new(1.0, 0.0, 0.0).norm(), 1.0));
-    assert!(is_close(Vector::new(1.0, 1.0, 0.0).norm(), 2.0_f32.sqrt()));
+fn vector_magnitude() {
+    assert!(is_close(Vector::new(1.0, 0.0, 0.0).magnitude(), 1.0));
     assert!(is_close(
-        Vector::new(3.0, -2.0, 4.0).norm(),
+        Vector::new(1.0, 1.0, 0.0).magnitude(),
+        2.0_f32.sqrt()
+    ));
+    assert!(is_close(
+        Vector::new(3.0, -2.0, 4.0).magnitude(),
         29.0_f32.sqrt()
     ));
 }

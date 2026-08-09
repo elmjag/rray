@@ -73,6 +73,12 @@ impl Vector {
         self.z
     }
 
+    pub fn normilize(&self) -> Vector {
+        let magnitude = self.magnitude();
+
+        Vector::new(self.x / magnitude, self.y / magnitude, self.z / magnitude)
+    }
+
     ///
     /// dot product between self and rhs
     ///
@@ -81,9 +87,9 @@ impl Vector {
     }
 
     ///
-    /// vector's norm (aka length, magnitude)
+    /// vector's magnitude (aka length, norm)
     ///
-    pub fn norm(&self) -> f32 {
+    pub fn magnitude(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
@@ -91,7 +97,7 @@ impl Vector {
     /// is true if this a unit vector, that is it have norm/magnitude of 1.0
     ///
     pub fn is_unit(&self) -> bool {
-        is_close(self.norm(), 1.0)
+        is_close(self.magnitude(), 1.0)
     }
 }
 

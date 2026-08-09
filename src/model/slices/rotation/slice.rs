@@ -43,10 +43,10 @@ impl Slice for RotationSlice {
 }
 
 impl RotationSlice {
-    pub fn new() -> BoxedSlice {
+    pub fn new(initial_angle: f32) -> BoxedSlice {
         Box::new(Self {
             motion: Motion::Idle,
-            angle: 0.0,
+            angle: initial_angle,
         })
     }
 

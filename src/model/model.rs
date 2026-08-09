@@ -21,6 +21,7 @@ pub struct Model {
     pump: Pump,
     store: Store,
     camera: Camera,
+    directional_light: Vector,
     mesh: Mesh,
 }
 
@@ -47,8 +48,8 @@ fn get_terminated(state: &State) -> bool {
 impl Model {
     pub fn new(sdl_context: &Sdl, scene_file: Option<PathBuf>) -> Result<Self, String> {
         let store = Store::new(vec![
-            (slices::ROTATION_X, RotationSlice::new()),
-            (slices::ROTATION_Z, RotationSlice::new()),
+            (slices::ROTATION_X, RotationSlice::new(-0.8)),
+            (slices::ROTATION_Z, RotationSlice::new(0.0)),
             (slices::APPLICATION, ApplicationSlice::new()),
         ]);
 
@@ -58,6 +59,8 @@ impl Model {
             pump: Pump::new(sdl_context),
             store,
             camera,
+            // hard-coded directional light
+            directional_light: Vector::new(0.1, -0.1, 1.0).normilize(),
             mesh,
         })
     }
@@ -71,7 +74,7 @@ impl Model {
         let transform = get_transform(&snapshot);
 
         let object = Object::new(&self.mesh, transform);
-        let scene = Scene::new(&self.camera, object);
+        let scene = Scene::new(&self.camera, &self.directional_light, object);
 
         (scene, get_terminated(&snapshot))
     }

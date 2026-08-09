@@ -6,7 +6,14 @@ use sdl2::pixels::Color;
 use serde::Deserialize;
 
 #[derive(Debug)]
-pub struct Face(Vertex, Vertex, Vertex, Color);
+pub struct Face {
+    v0: Vertex,
+    v1: Vertex,
+    v2: Vertex,
+    // store normal, to avoid recalulating it
+    normal: Vector,
+    color: Color,
+}
 
 #[derive(Debug, Deserialize)]
 pub struct Mesh {
@@ -17,48 +24,52 @@ pub struct Mesh {
     triangles: Vec<(usize, usize, usize, usize)>,
 }
 
+fn calculate_face_normal(v0: &Vertex, v1: &Vertex, v2: &Vertex) -> Vector {
+    let side_a = v1 - v0;
+    let side_b = v2 - v0;
+
+    side_a.cross(&side_b).normilize()
+}
+
 impl Face {
     pub fn new(vertex0: Vertex, vertex1: Vertex, vertex2: Vertex, color: Color) -> Face {
-        Face(vertex0, vertex1, vertex2, color)
+        let normal = calculate_face_normal(&vertex0, &vertex1, &vertex2);
+        Face {
+            v0: vertex0,
+            v1: vertex1,
+            v2: vertex2,
+            normal,
+            color,
+        }
     }
 
     ///
     /// vertex 0
     ///
     pub fn v0(&self) -> &Vertex {
-        &self.0
+        &self.v0
     }
 
     ///
     /// vertex 1
     ///
     pub fn v1(&self) -> &Vertex {
-        &self.1
+        &self.v1
     }
 
     ///
     /// vertex 2
     ///
     pub fn v2(&self) -> &Vertex {
-        &self.2
+        &self.v2
     }
 
-    ///
-    /// side A vector
-    ///
-    pub fn v0v1(&self) -> Vector {
-        &self.1 - &self.0
-    }
-
-    ///
-    /// side B vector
-    ///
-    pub fn v0v2(&self) -> Vector {
-        &self.2 - &self.0
+    pub fn normal(&self) -> &Vector {
+        &self.normal
     }
 
     pub fn color(&self) -> Color {
-        self.3
+        self.color
     }
 }
 
