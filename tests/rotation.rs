@@ -5,7 +5,7 @@ use utils::vertices_are_close;
 
 use rray::{
     scene::{Rotation, Vertex},
-    space::Vector,
+    vector::Vector,
 };
 
 #[test]

@@ -1,7 +1,7 @@
 use crate::{
     ray::Ray,
     scene::Face,
-    space::{Axis, Vector},
+    vector::{Axis, Vector},
 };
 
 ///

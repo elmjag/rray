@@ -1,4 +1,4 @@
-use rray::{math::is_close, space::Vector};
+use rray::{math::is_close, vector::Vector};
 
 ///
 /// test vector dot product calculation

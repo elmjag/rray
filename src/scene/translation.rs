@@ -1,4 +1,4 @@
-use crate::{scene::Vertex, space::Vector};
+use crate::{scene::Vertex, vector::Vector};
 
 pub struct Translation(Vector);
 

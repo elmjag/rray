@@ -1,6 +1,6 @@
 use crate::{
     canvas::RenderCanvas, intersect::ray_triangle_intersection, ray::Ray, scene::Face,
-    scene::Scene, space::Vector,
+    scene::Scene, vector::Vector,
 };
 use core::f32;
 use sdl2::pixels::Color;

@@ -1,4 +1,4 @@
-use rray::{scene::Vertex, space::Vector};
+use rray::{scene::Vertex, vector::Vector};
 
 ///
 /// test Vertex substraction

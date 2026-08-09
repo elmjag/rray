@@ -10,6 +10,6 @@ pub mod ray;
 pub mod redux;
 pub mod render;
 pub mod scene;
-pub mod space;
 pub mod timer;
+pub mod vector;
 pub mod window;

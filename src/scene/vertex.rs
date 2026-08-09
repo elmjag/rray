@@ -1,4 +1,4 @@
-use crate::space::Vector;
+use crate::vector::Vector;
 use std::ops::Sub;
 
 #[derive(Debug, Clone, PartialEq)]

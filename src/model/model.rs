@@ -6,8 +6,8 @@ use crate::{
     loader,
     redux::{State, Store},
     scene::{Camera, Mesh, Object, Rotation, Scene, Transform, Translation},
-    space::Vector,
     timer::Timer,
+    vector::Vector,
 };
 use sdl2::Sdl;
 use std::path::PathBuf;

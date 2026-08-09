@@ -1,6 +1,6 @@
 use crate::{
     scene::{Camera, Object},
-    space::Vector,
+    vector::Vector,
 };
 
 pub struct Scene<'a> {

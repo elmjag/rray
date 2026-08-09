@@ -2,7 +2,7 @@ use rray::{
     intersect::ray_triangle_intersection,
     ray::Ray,
     scene::{Face, Vertex},
-    space::Vector,
+    vector::Vector,
 };
 use sdl2::pixels::Color;
 

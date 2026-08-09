@@ -2,7 +2,7 @@ use rray::{
     canvas::RenderCanvas,
     render,
     scene::{Camera, Mesh, Object, Rotation, Scene, Transform, Translation},
-    space::{Vector, Z_AXIS},
+    vector::{Vector, Z_AXIS},
 };
 use sdl2::pixels::Color;
 use std::collections::HashSet;

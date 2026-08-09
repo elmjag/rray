@@ -1,4 +1,4 @@
-use crate::{scene::Vertex, space::Vector};
+use crate::{scene::Vertex, vector::Vector};
 
 #[derive(Debug, PartialEq)]
 pub struct Ray {
