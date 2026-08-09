@@ -1,4 +1,4 @@
-use crate::{ray::Ray, space::Vertex};
+use crate::{ray::Ray, scene::Vertex};
 
 pub struct Camera {
     canvas_width: u32,

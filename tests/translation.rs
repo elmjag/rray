@@ -1,5 +1,4 @@
-use rray::space::Vertex;
-use rray::translation::Translation;
+use rray::scene::{Translation, Vertex};
 
 mod utils;
 use utils::vertices_are_close;

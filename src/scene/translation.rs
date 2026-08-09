@@ -1,6 +1,4 @@
-use crate::space::{Vector, Vertex};
-
-pub const ZERO_TRANSLATION: Translation = Translation::new(0.0, 0.0, 0.0);
+use crate::{scene::Vertex, space::Vector};
 
 pub struct Translation(Vector);
 

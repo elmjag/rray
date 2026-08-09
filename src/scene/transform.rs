@@ -1,4 +1,4 @@
-use crate::{rotation::Rotation, space::Vertex, translation::Translation};
+use crate::scene::{Rotation, Translation, Vertex};
 
 pub struct Transform {
     translation: Translation,

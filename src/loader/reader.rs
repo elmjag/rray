@@ -1,4 +1,4 @@
-use crate::{camera::Camera, mesh::Mesh};
+use crate::scene::{Camera, Mesh};
 use serde::Deserialize;
 use std::fs::File;
 use std::path::PathBuf;

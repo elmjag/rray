@@ -1,8 +1,8 @@
 use rray::{
     intersect::ray_triangle_intersection,
-    mesh::Face,
     ray::Ray,
-    space::{Vector, Vertex},
+    scene::{Face, Vertex},
+    space::Vector,
 };
 use sdl2::pixels::Color;
 

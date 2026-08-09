@@ -1,4 +1,4 @@
-use crate::{camera::Camera, mesh::Mesh};
+use crate::scene::{Camera, Mesh};
 use std::path::PathBuf;
 
 mod default;

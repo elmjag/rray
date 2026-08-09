@@ -1,7 +1,4 @@
-use crate::{
-    quaternion::Quaternion,
-    space::{Vector, Vertex},
-};
+use crate::{quaternion::Quaternion, scene::Vertex, space::Vector};
 use std::ops::Mul;
 
 pub struct Rotation {

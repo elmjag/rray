@@ -1,6 +1,6 @@
 use crate::{
-    mesh::Face,
     ray::Ray,
+    scene::Face,
     space::{Axis, Vector},
 };
 

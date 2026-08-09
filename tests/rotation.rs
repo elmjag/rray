@@ -4,8 +4,8 @@ mod utils;
 use utils::vertices_are_close;
 
 use rray::{
-    rotation::Rotation,
-    space::{Vector, Vertex},
+    scene::{Rotation, Vertex},
+    space::Vector,
 };
 
 #[test]

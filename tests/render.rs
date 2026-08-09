@@ -1,13 +1,8 @@
 use rray::{
-    camera::Camera,
     canvas::RenderCanvas,
-    mesh::Mesh,
     render,
-    rotation::Rotation,
-    scene::{Object, Scene},
+    scene::{Camera, Mesh, Object, Rotation, Scene, Transform, Translation},
     space::{Vector, Z_AXIS},
-    transform::Transform,
-    translation::Translation,
 };
 use sdl2::pixels::Color;
 use std::collections::HashSet;

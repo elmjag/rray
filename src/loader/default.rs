@@ -1,4 +1,4 @@
-use crate::{camera::Camera, mesh::Mesh};
+use crate::scene::{Camera, Mesh};
 use sdl2::pixels::Color;
 use std::f32::consts::TAU;
 

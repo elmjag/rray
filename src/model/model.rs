@@ -3,16 +3,11 @@ use super::{
     slices::{self, application::ApplicationSlice, rotation::slice::RotationSlice},
 };
 use crate::{
-    camera::Camera,
     loader,
-    mesh::Mesh,
     redux::{State, Store},
-    rotation::Rotation,
-    scene::{Object, Scene},
+    scene::{Camera, Mesh, Object, Rotation, Scene, Transform, Translation},
     space::Vector,
     timer::Timer,
-    transform::Transform,
-    translation::Translation,
 };
 use sdl2::Sdl;
 use std::path::PathBuf;
