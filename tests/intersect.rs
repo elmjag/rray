@@ -1,10 +1,9 @@
 use rray::{
     intersect::ray_triangle_intersection,
     ray::Ray,
-    scene::{Face, Vertex},
+    scene::{Color, Face, Vertex},
     vector::Vector,
 };
-use sdl2::pixels::Color;
 
 fn get_face() -> Face {
     Face::new(

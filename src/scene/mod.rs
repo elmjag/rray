@@ -1,4 +1,5 @@
 mod camera;
+mod color;
 mod face;
 mod mesh;
 mod object;
@@ -9,6 +10,7 @@ mod translation;
 mod vertex;
 
 pub use camera::Camera;
+pub use color::Color;
 pub use face::Face;
 pub use mesh::Mesh;
 pub use object::Object;

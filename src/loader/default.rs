@@ -1,5 +1,4 @@
-use crate::scene::{Camera, Mesh};
-use sdl2::pixels::Color;
+use crate::scene::{Camera, Color, Mesh};
 use std::f32::consts::TAU;
 
 const PYRAMID_SEGMENTS: usize = 8;
@@ -51,12 +50,12 @@ fn triangles(num_verts: usize) -> Vec<(usize, usize, usize, usize)> {
 
 pub fn get_mesh() -> Mesh {
     let colors = vec![
-        Color::RED.rgb(),
-        Color::GREEN.rgb(),
-        Color::BLUE.rgb(),
-        Color::YELLOW.rgb(),
-        Color::BLACK.rgb(),
-        Color::GRAY.rgb(),
+        Color::RED,
+        Color::GREEN,
+        Color::BLUE,
+        Color::YELLOW,
+        Color::BLACK,
+        Color::GRAY,
     ];
     let vertices = vertices(PYRAMID_SEGMENTS, PYRAMID_RADIUS, PYRAMID_HEIGHT);
     let triangles = triangles(vertices.len());

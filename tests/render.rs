@@ -1,10 +1,10 @@
 use rray::{
     canvas::RenderCanvas,
     render,
-    scene::{Camera, Mesh, Object, Rotation, Scene, Transform, Translation},
+    scene::{Camera, Color, Mesh, Object, Rotation, Scene, Transform, Translation},
     vector::{Vector, Z_AXIS},
 };
-use sdl2::pixels::Color;
+use sdl2::pixels::Color as SdlColor;
 use std::collections::HashSet;
 
 const WIDTH: u32 = 24;
@@ -15,7 +15,7 @@ const GREEN_DEPTH: f32 = 8.0;
 const RED_DEPTH: f32 = 8.0;
 
 struct TestCanvas {
-    pixels: HashSet<(i32, i32, Color)>,
+    pixels: HashSet<(i32, i32, SdlColor)>,
 }
 
 impl TestCanvas {
@@ -27,11 +27,11 @@ impl TestCanvas {
 }
 
 impl RenderCanvas for TestCanvas {
-    fn set_pixel(&mut self, x: i32, y: i32, c: Color) {
+    fn set_pixel(&mut self, x: i32, y: i32, c: SdlColor) {
         self.pixels.insert((x, y, c));
     }
 
-    fn clear(&mut self, _clear_color: Color) {
+    fn clear(&mut self, _clear_color: SdlColor) {
         self.pixels.clear();
     }
 
@@ -41,7 +41,7 @@ impl RenderCanvas for TestCanvas {
 }
 
 fn get_mesh() -> Mesh {
-    let colors = vec![Color::GREEN.rgb(), Color::RED.rgb()];
+    let colors = vec![Color::GREEN, Color::RED];
     let vertices = vec![
         (-2.0, 0.0, GREEN_DEPTH + 2.0),
         (1.0, 2.0, GREEN_DEPTH),
@@ -76,8 +76,8 @@ fn draw_frame() {
     );
 
     // shaded result colors, taking into account incidence with direct light
-    let shaded_green = Color::RGB(0, 212, 0);
-    let shaded_red = Color::RGB(212, 0, 0);
+    let shaded_green = SdlColor::RGB(0, 212, 0);
+    let shaded_red = SdlColor::RGB(212, 0, 0);
 
     let expected_pixels = HashSet::from([
         (13, 13, shaded_green),

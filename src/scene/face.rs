@@ -1,5 +1,7 @@
-use crate::{scene::Vertex, vector::Vector};
-use sdl2::pixels::Color;
+use crate::{
+    scene::{Color, Vertex},
+    vector::Vector,
+};
 
 #[derive(Debug)]
 pub struct Face {
